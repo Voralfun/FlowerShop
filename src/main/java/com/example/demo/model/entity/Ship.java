@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import com.example.demo.model.enums.ShipStatus;
 import com.example.demo.model.enums.Type;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,11 +27,15 @@ public class Ship {
     @Column(name = "ship_type")
     Type type;
     @Column(name = "ship_length")
-    float length;
+    Float length;
+    @Column(unique = true)
+    String serialNUM;
     @CreationTimestamp
     @Column(name = "created_at")
     LocalDateTime updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL)
     List<Crew> crew;
+    @Enumerated(EnumType.STRING)
+    ShipStatus status;
 }

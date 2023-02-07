@@ -1,5 +1,6 @@
 package com.example.demo.model.entity;
 
+import com.example.demo.model.enums.CrewStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,9 @@ public class Crew {
     @CreationTimestamp
     @Column(name = "created_at")
     LocalDateTime updatedAt;
+    @ManyToOne(cascade = CascadeType.ALL)
+    Ship ship;
+    String task;
+    @Enumerated(EnumType.STRING)
+    CrewStatus status = CrewStatus.CREATED;
 }
