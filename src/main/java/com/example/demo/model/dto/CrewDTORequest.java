@@ -1,7 +1,7 @@
 package com.example.demo.model.dto;
 
 
-import com.example.demo.model.enums.CrewStatus;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

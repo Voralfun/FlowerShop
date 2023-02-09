@@ -16,7 +16,7 @@ public class ShipController {
     private final ShipService shipService;
     @PostMapping
     @Operation(summary = "Создание корабля")
-    public ShipDTO createShip(@RequestBody ShipDTO shipDTO){
+    public ShipDTO create(@RequestBody ShipDTO shipDTO){
         return shipService.create(shipDTO);
     }
     @PutMapping
@@ -24,7 +24,7 @@ public class ShipController {
         return ResponseEntity.ok(shipService.update(shipDTO));
     }
     @GetMapping
-    public ResponseEntity<ShipDTO> getShip(@RequestBody String serialNUM){
+    public ResponseEntity<ShipDTO> getShip(@RequestParam(name = "serialNUM",required = true) String serialNUM) {
         return ResponseEntity.ok(shipService.get(serialNUM));
     }
     @DeleteMapping

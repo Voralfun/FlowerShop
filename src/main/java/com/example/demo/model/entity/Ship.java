@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -30,8 +29,9 @@ public class Ship {
     Float length;
     @Column(unique = true)
     String serialNUM;
-    @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    LocalDateTime createdAt;
+    @Column(name = "updated_at")
     LocalDateTime updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -32,15 +32,18 @@ import java.util.stream.Collectors;
 public class CrewServiceImpl implements CrewService {
     private final ShipService shipService;
     private final CrewRepository crewRepository;
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
     @Override
     public CrewDTORequest create(CrewDTORequest crewDTORequest) {
         crewRepository.findByTask(crewDTORequest.getTask()).ifPresent(
                 h -> {
-                    throw new CustomException("This task has already been set", HttpStatus.BAD_REQUEST);}
+                    throw new CustomException("The current task already exists", HttpStatus.BAD_REQUEST);
+                }
         );
-        Crew crew = mapper.convertValue(crewDTORequest,Crew.class);
+
+        Crew crew = mapper.convertValue(crewDTORequest, Crew.class);
         crewRepository.save(crew);
+
         return mapper.convertValue(crew, CrewDTORequest.class);
     }
     @Override

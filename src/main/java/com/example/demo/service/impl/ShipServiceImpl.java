@@ -33,13 +33,14 @@ public class ShipServiceImpl implements ShipService {
                 h -> {
                     throw new CustomException("This Serial Number has already been set", HttpStatus.BAD_REQUEST);}
         );
-        Ship ship = mapper.convertValue(shipDTO,Ship.class);
-        Ship save = shipRepository.save(ship);
+        Ship crew = mapper.convertValue(shipDTO,Ship.class);
+        Ship save = shipRepository.save(crew);
         return mapper.convertValue(save,ShipDTO.class);
     }
     @Override
     public ShipDTO update(ShipDTO shipDTO) {
         Ship ship = getShip(shipDTO.getSerialNUM());
+        ship.setName(shipDTO.getName() == null ? ship.getName():shipDTO.getName());
         ship.setType(shipDTO.getType() == null ? ship.getType():shipDTO.getType());
         ship.setLength(shipDTO.getLength() == null ? ship.getLength():shipDTO.getLength());
         ship.setUpdatedAt(LocalDateTime.now());
@@ -61,8 +62,8 @@ public class ShipServiceImpl implements ShipService {
         shipRepository.save(ship);
     }
     @Override
-    public Ship getShip(String shipDTO) {
-        return shipRepository.findByserialNUM(shipDTO)
-                .orElseThrow(() -> new CustomException("serial Number was not found", HttpStatus.NOT_FOUND));
+    public Ship getShip(String serialNUM) {
+        return shipRepository.findByserialNUM(serialNUM)
+                .orElseThrow(() -> new CustomException("Serial Number was not found", HttpStatus.NOT_FOUND));
     }
 }

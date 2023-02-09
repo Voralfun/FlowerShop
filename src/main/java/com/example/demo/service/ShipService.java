@@ -5,8 +5,7 @@ import com.example.demo.model.entity.Ship;
 
 public interface ShipService {
 
-    String getShipComponents();
-    Integer getEngineInfo();
+    ShipDTO create(ShipDTO shipDTO);
 
     ShipDTO update(ShipDTO shipDTO);
 
@@ -14,7 +13,8 @@ public interface ShipService {
 
     void delete(String serialNUM);
 
-    ShipDTO create(ShipDTO shipDTO);
+    Ship getShip(String serialNUM);
 
-    Ship getShip(String shipDTO);
+    String getShipComponents();
+    Integer getEngineInfo();
 }

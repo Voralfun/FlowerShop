@@ -18,19 +18,19 @@ public class CrewController {
     private final CrewService crewService;
     @PostMapping
     @Operation(summary = "Создание экипажа")
-    public ResponseEntity<CrewDTORequest> createCrew(@RequestBody CrewDTORequest crewDTORequest){
-        return ResponseEntity.ok(crewService.create(crewDTORequest));
+    public CrewDTORequest createCrew(@RequestBody CrewDTORequest crewDTORequest){
+        return crewService.create(crewDTORequest);
     }
     @PutMapping
     public ResponseEntity<CrewDTORequest> updateCrew(@RequestBody CrewDTORequest crewDTORequest){
         return ResponseEntity.ok(crewService.update(crewDTORequest));
     }
     @GetMapping
-    public ResponseEntity<CrewDTORequest> getCrew(@RequestBody String task){
+    public ResponseEntity<CrewDTORequest> getCrew(@RequestParam(name = "task",required = true) String task){
         return ResponseEntity.ok(crewService.get(task));
     }
     @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteCrew(@RequestBody String task){
+    public ResponseEntity<HttpStatus> deleteCrew(@RequestParam String task){
         crewService.delete(task);
         return ResponseEntity.ok().build();
     }
