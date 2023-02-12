@@ -1,17 +1,17 @@
 package com.example.demo.model.dto;
 
-import com.example.demo.model.entity.Crew;
 import com.example.demo.model.enums.Type;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 public class ShipDTO {
     String name;
     Type type;
-    float length;
-
-    List<CrewDTO> crews;
+    Float length;
+    String serialNUM;
 }

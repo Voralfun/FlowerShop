@@ -1,54 +1,23 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.dto.CrewDTO;
+import com.example.demo.exceptions.CustomException;
 import com.example.demo.model.dto.ShipDTO;
-import com.example.demo.model.entity.Crew;
 import com.example.demo.model.entity.Ship;
-import com.example.demo.model.enums.Type;
+import com.example.demo.model.enums.ShipStatus;
 import com.example.demo.model.repository.ShipRepository;
 import com.example.demo.service.ShipService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ShipServiceImpl implements ShipService {
     private final ShipRepository shipRepository;
     private final ObjectMapper mapper;
-    @Override
-    public ShipDTO createShipName(ShipDTO shipDTO) {
-       Ship ship = mapper.convertValue(shipDTO,Ship.class);
-       ship.setUpdatedAt(LocalDateTime.now());
-        List<Crew> crews = shipDTO.getCrews()
-                .stream()
-                .map(h -> {
-                    Crew crew = new Crew();
-                    crew.setCrewNumber(h.getCrewNumber());
-                    crew.setCrewType(h.getCrewType());
-                    return crew;
-                })
-                .collect(Collectors.toList());
-        ship.setCrew(crews);
-        Ship entity = shipRepository.save(ship);
-        ShipDTO result = mapper.convertValue(entity,ShipDTO.class);
-        List<CrewDTO> crewsDTO = entity.getCrew()
-                .stream()
-                .map(h -> {
-                    CrewDTO crewDTO = new CrewDTO();
-                    crewDTO.setCrewNumber(h.getCrewNumber());
-                    crewDTO.setCrewType(h.getCrewType());
-                    return crewDTO;
-                })
-                .collect(Collectors.toList());
-        result.setCrews(crewsDTO);
-        return result;
-    }
-
     @Override
     public String getShipComponents() {
         return "Engine";
@@ -57,5 +26,44 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public Integer getEngineInfo() {
         return 153550;
+    }
+
+    public ShipDTO create(ShipDTO shipDTO) {
+        shipRepository.findByserialNUM(shipDTO.getSerialNUM()).ifPresent(
+                h -> {
+                    throw new CustomException("This Serial Number has already been set", HttpStatus.BAD_REQUEST);}
+        );
+        Ship crew = mapper.convertValue(shipDTO,Ship.class);
+        Ship save = shipRepository.save(crew);
+        return mapper.convertValue(save,ShipDTO.class);
+    }
+    @Override
+    public ShipDTO update(ShipDTO shipDTO) {
+        Ship ship = getShip(shipDTO.getSerialNUM());
+        ship.setName(shipDTO.getName() == null ? ship.getName():shipDTO.getName());
+        ship.setType(shipDTO.getType() == null ? ship.getType():shipDTO.getType());
+        ship.setLength(shipDTO.getLength() == null ? ship.getLength():shipDTO.getLength());
+        ship.setUpdatedAt(LocalDateTime.now());
+        ship.setStatus(ShipStatus.UPDATED);
+        Ship save = shipRepository.save(ship);
+        return mapper.convertValue(save,ShipDTO.class);
+    }
+
+    @Override
+    public ShipDTO get(String serialNUM) {
+        return mapper.convertValue(getShip(serialNUM),ShipDTO.class);
+    }
+
+    @Override
+    public void delete(String serialNUM) {
+        Ship ship = getShip(serialNUM);
+        ship.setStatus(ShipStatus.DELETED);
+        ship.setUpdatedAt(LocalDateTime.now());
+        shipRepository.save(ship);
+    }
+    @Override
+    public Ship getShip(String serialNUM) {
+        return shipRepository.findByserialNUM(serialNUM)
+                .orElseThrow(() -> new CustomException("Serial Number was not found", HttpStatus.NOT_FOUND));
     }
 }
