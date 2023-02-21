@@ -15,7 +15,7 @@ spring:
             non_contextual_creation: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/Demo
+    url: jdbc:postgresql://localhost:5432/FlowerShop
     username: postgres
     password: 1921
     driver-class-name: org.postgresql.Driver
