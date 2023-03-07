@@ -1,5 +1,6 @@
 package com.example.flowershop.model.dto;
 
+import com.example.flowershop.model.entity.Cart;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -13,4 +14,5 @@ public class ClientDTO {
     private String email;
     private LocalDate birthdate;
     private Integer phoneNUM;
+    private Cart cart;
 }

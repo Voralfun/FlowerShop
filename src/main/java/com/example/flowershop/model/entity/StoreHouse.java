@@ -1,27 +1,22 @@
 package com.example.flowershop.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Entity
 @Table(schema = "public",name = "clients")
-public class Client {
+public class StoreHouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String surname;
-    private String patronymic;
-    private LocalDate birthdate;
+    private String Location;
     @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
@@ -32,10 +27,6 @@ public class Client {
     LocalDateTime updatedAt;
     private String email;
 
-    private Integer phoneNUM;
-
     @Enumerated(EnumType.STRING)
     Status status;
-    @OneToOne(cascade =  CascadeType.REMOVE)
-    private Cart cart;
 }

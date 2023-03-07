@@ -2,10 +2,17 @@ package com.example.flowershop.service.impl;
 
 import com.example.flowershop.exceptions.CustomException;
 import com.example.flowershop.exceptions.FlowerServiceException;
+import com.example.flowershop.mapper.FlowerMapper;
 import com.example.flowershop.model.dto.FlowerDTO;
+import com.example.flowershop.model.entity.Cart;
+import com.example.flowershop.model.entity.Client;
 import com.example.flowershop.model.entity.Flower;
 import com.example.flowershop.model.entity.Status;
+import com.example.flowershop.model.repository.CartRepository;
+import com.example.flowershop.model.repository.ClientRepository;
 import com.example.flowershop.model.repository.FlowerRepository;
+import com.example.flowershop.service.CartService;
+import com.example.flowershop.service.ClientService;
 import com.example.flowershop.service.FlowerService;
 import com.example.flowershop.utils.JsonConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,17 +22,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class FlowerServiceImpl implements FlowerService {
 
     private final FlowerRepository flowerRepository;
+    private final ClientService clientService;
+    private final CartService cartService;
     private final ObjectMapper objectMapper;
+    private final FlowerMapper flowerMapper = FlowerMapper.MAPPER;
     private static final String EXC_MESSAGE = "Flower with id %d is not found";
 
     @Override
@@ -73,6 +87,11 @@ public class FlowerServiceImpl implements FlowerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<FlowerDTO> getAll() {
+      return flowerMapper.fromFlowerList(flowerRepository.findAll());
+    }
+
 
     @Override
     public ResponseEntity<String> readFlower(Long id) {
@@ -94,5 +113,22 @@ public class FlowerServiceImpl implements FlowerService {
     public Flower getFlower(Long id) {
         return flowerRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Flower with this id is not founded", HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public void addToClientCart(Long flowerId, String email) {
+        Client client = clientService.findByEmail(email);
+        if(email == null){
+            throw new RuntimeException("Client is not found! Id is null");
+        }
+        Cart cart = client.getCart();
+        if (cart == null){
+            Cart newCart = cartService.createCart(client, Collections.singletonList(flowerId));
+            client.setCart(newCart);
+            clientService.save(client);
+        }else{
+            cartService.addFlowers(cart,Collections.singletonList(flowerId));
+        }
     }
 }

@@ -1,19 +1,18 @@
 package com.example.flowershop.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import java.util.List;
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(schema = "public",name = "Flower")
+@Table(name = "flowers")
 public class Flower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +21,7 @@ public class Flower {
     private String sort;
     @Enumerated(EnumType.STRING)
     private Type type;
-    private Double price;
+    private BigDecimal price;
 
     @JsonIgnore
     @CreationTimestamp
@@ -31,7 +30,6 @@ public class Flower {
     @JsonIgnore
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
-
     @Enumerated(EnumType.STRING)
     Status status;
 }

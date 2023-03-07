@@ -17,7 +17,7 @@ public class FlowerController {
     private final FlowerService flowerService;
 
     @PostMapping
-    public FlowerDTO createClient(@RequestBody FlowerDTO flowerDTO) {
+    public FlowerDTO createFlower(@RequestBody FlowerDTO flowerDTO) {
         return flowerService.createFlower(flowerDTO);
     }
 
@@ -41,4 +41,5 @@ public class FlowerController {
     public ResponseEntity<List<FlowerDTO>> getAllFlowers() {
         return flowerService.getAllFlowers();
     }
+
 }

@@ -16,6 +16,7 @@ public interface ClientService {
     ClientDTO createClient(ClientDTO clientDTO);
 
     ClientDTO read(Long id);
+    Client findByEmail(String email);
 
     ClientDTO update( ClientDTO clientDto);
 
@@ -24,4 +25,6 @@ public interface ClientService {
     ResponseEntity<List<ClientDTO>> getAllClients();
 
     Client getClient(Long id);
+
+    void save(Client client);
 }

@@ -11,9 +11,8 @@ import java.util.List;
 
 public interface FlowerService {
     void delete(Long id);
-
     List<FlowerDTO> readAll();
-
+    List<FlowerDTO> getAll();
     FlowerDTO createFlower(FlowerDTO FlowerDTO);
 
     FlowerDTO read(Long id);
@@ -24,5 +23,6 @@ public interface FlowerService {
 
     ResponseEntity<List<FlowerDTO>> getAllFlowers();
 
-    Flower getFlower(Long id);
+    Flower getFlower(Long Id);
+    void addToClientCart(Long flowerId,String email);
 }

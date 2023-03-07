@@ -69,6 +69,12 @@ public class ClientServiceImpl implements ClientService {
                 new FlowerServiceException(String.format(EXC_MESSAGE, id)));
         return objectMapper.convertValue(client, ClientDTO.class);
     }
+
+    @Override
+    public Client findByEmail(String email) {
+        return clientRepository.findByEmail(email);
+    }
+
     @Override
     public List< ClientDTO> readAll() {
         return clientRepository.findAll().stream()
@@ -98,4 +104,10 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Client with this id is not founded", HttpStatus.NOT_FOUND));
     }
+
+    @Override
+    public void save(Client client) {
+            clientRepository.save(client);
+    }
+
 }
