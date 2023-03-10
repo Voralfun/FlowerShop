@@ -24,8 +24,7 @@ public class StoreHouse {
 
     @JsonIgnore
     @Column(name = "updated_at")
-    LocalDateTime updatedAt;
-    private String email;
+
 
     @Enumerated(EnumType.STRING)
     Status status;

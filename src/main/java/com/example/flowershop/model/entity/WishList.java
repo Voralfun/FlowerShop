@@ -2,40 +2,50 @@ package com.example.flowershop.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
+
 @Getter
 @Setter
 @Entity
-@Table(schema = "public",name = "cart")
-public class Cart {
+@Table(name = "wishlist")
+public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "flower_id")
-    private Flower flower;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
+    @OneToOne(targetEntity = Client.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private Client client;
-
-    private int quantity;
-
     @Column(name = "created_date")
     private Date createdDate;
     @JsonIgnore
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
-    @Enumerated(EnumType.STRING)
-    Status status;
 
-    public Cart() {
+    @ManyToOne
+    @JoinColumn(name = "flower_id")
+    private Flower flower;
+
+    public WishList() {
+    }
+
+    public WishList(Client client, Flower flower) {
+        this.client = client;
+        this.flower = flower;
+    }
+
+    public WishList(Long id, Client client, Date createdDate, Flower flower) {
+        this.id = id;
+        this.client = client;
+        this.createdDate = createdDate;
+        this.flower = flower;
     }
 
     public Long getId() {
@@ -46,14 +56,6 @@ public class Cart {
         this.id = id;
     }
 
-    public Flower getFlower() {
-        return flower;
-    }
-
-    public void setFlower(Flower flower) {
-        this.flower = flower;
-    }
-
     public Client getClient() {
         return client;
     }
@@ -62,15 +64,7 @@ public class Cart {
         this.client = client;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Date createdDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
@@ -86,11 +80,11 @@ public class Cart {
         this.updatedAt = updatedAt;
     }
 
-    public Status getStatus() {
-        return status;
+    public Flower getFlower() {
+        return flower;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setFlower(Flower flower) {
+        this.flower = flower;
     }
 }

@@ -1,5 +1,4 @@
 package com.example.flowershop.service;
 
-public interface OrderService {
-
+public interface WishListService {
 }

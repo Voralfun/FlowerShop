@@ -9,22 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 public interface ClientService {
-    void delete(Long id);
 
-    List< ClientDTO> readAll();
 
-    ClientDTO createClient(ClientDTO clientDTO);
 
-    ClientDTO read(Long id);
-    Client findByEmail(String email);
+    ClientDTO read(String email);
 
-    ClientDTO update( ClientDTO clientDto);
+    ClientDTO update(Client clientDTO);
 
-    ResponseEntity<String> readClient(@PathVariable("id") Long id);
+    void delete(String email);
 
-    ResponseEntity<List<ClientDTO>> getAllClients();
-
-    Client getClient(Long id);
-
-    void save(Client client);
+    Client getClient(String email);
 }

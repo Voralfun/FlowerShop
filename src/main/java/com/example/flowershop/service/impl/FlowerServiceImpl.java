@@ -1,32 +1,18 @@
 package com.example.flowershop.service.impl;
 
-import com.example.flowershop.exceptions.CustomException;
 import com.example.flowershop.exceptions.FlowerServiceException;
-import com.example.flowershop.mapper.FlowerMapper;
 import com.example.flowershop.model.dto.FlowerDTO;
-import com.example.flowershop.model.entity.Cart;
-import com.example.flowershop.model.entity.Client;
 import com.example.flowershop.model.entity.Flower;
 import com.example.flowershop.model.entity.Status;
-import com.example.flowershop.model.repository.CartRepository;
-import com.example.flowershop.model.repository.ClientRepository;
 import com.example.flowershop.model.repository.FlowerRepository;
-import com.example.flowershop.service.CartService;
-import com.example.flowershop.service.ClientService;
 import com.example.flowershop.service.FlowerService;
-import com.example.flowershop.utils.JsonConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,100 +21,72 @@ import java.util.stream.Collectors;
 
 public class FlowerServiceImpl implements FlowerService {
 
-    private final FlowerRepository flowerRepository;
-    private final ClientService clientService;
-    private final CartService cartService;
-    private final ObjectMapper objectMapper;
-    private final FlowerMapper flowerMapper = FlowerMapper.MAPPER;
-    private static final String EXC_MESSAGE = "Flower with id %d is not found";
+    FlowerRepository flowerRepository;
+    ObjectMapper mapper;
 
-    @Override
-    public FlowerDTO createFlower(FlowerDTO flowerDTO) {
+
+    public Flower createFlower(FlowerDTO flowerDTO) {
         flowerRepository.findById(flowerDTO.getId()).ifPresent(
                 h -> {
-                    throw new CustomException("Flower with current id is already exists", HttpStatus.BAD_REQUEST);
+                    throw new FlowerServiceException("Товар с таким id уже зарегистрирован");
                 }
         );
 
-        Flower flower = objectMapper.convertValue(flowerDTO, Flower.class);
+        Flower flower = mapper.convertValue(flowerDTO, Flower.class);
         Flower save = flowerRepository.save(flower);
-        flower.setStatus(Status.CREATED);
-        return objectMapper.convertValue(save, FlowerDTO.class);
+        return mapper.convertValue(save, Flower.class);
     }
-    @Override
-    public FlowerDTO update(FlowerDTO flowerDTO) {
-        Flower flower = getFlower(flowerDTO.getId());
-        flower.setType(flowerDTO.getType() == null ? flower.getType() : flower.getType());
-        flower.setSort(flowerDTO.getSort() == null ? flower.getSort() : flower.getSort());
-        flower.setPrice(flowerDTO.getPrice() == null ? flower.getPrice() : flower.getPrice());
-        flower.setUpdatedAt(LocalDateTime.now());
-        flower.setStatus(Status.UPDATED);
-        return objectMapper.convertValue(flowerRepository.save(flower), FlowerDTO.class);
-    }
-
-    @Override
-    public void delete(Long id) {
-        Flower flower = getFlower(id);
-        flower.setStatus(Status.DELETED);
-        flower.setUpdatedAt(LocalDateTime.now());
-        flowerRepository.save(flower);
-    }
-
+    private static final String EXC_MESSAGE = "Не найден товар с такми id";
     @Override
     public FlowerDTO read(Long id) {
-        Flower client = flowerRepository.findById(id).orElseThrow(() ->
+        Flower flower = flowerRepository.findById(id).orElseThrow(() ->
                 new FlowerServiceException(String.format(EXC_MESSAGE, id)));
-        return objectMapper.convertValue(client, FlowerDTO.class);
+        return mapper.convertValue(flower, FlowerDTO.class);
     }
     @Override
-    public List< FlowerDTO> readAll() {
+    public FlowerDTO update(Flower flowerDTO) {
+        Long id = flowerDTO.getId();
+        if (id == null) {
+            throw new FlowerServiceException("Не найден id товара");
+        }
+        read(id);
+        Flower flower = mapper.convertValue(flowerDTO, Flower.class);
+        flower.setStatus(Status.valueOf(String.valueOf(Status.UPDATED)));
+        Flower save = flowerRepository.save(flower);
+        return mapper.convertValue(save, FlowerDTO.class);
+
+    }
+
+
+    @Override
+    public FlowerDTO delete(Long id) {
+        Flower flower = mapper.convertValue(read(id), Flower.class);
+        flower.setStatus(Status.valueOf(String.valueOf(Status.DELETED)));
+        Flower save = flowerRepository.save(flower);
+        return mapper.convertValue(save, FlowerDTO.class);
+    }
+
+    @Override
+    public List<FlowerDTO> readAll() {
         return flowerRepository.findAll().stream()
-                .map(client -> objectMapper.convertValue(client, FlowerDTO.class))
+                .map(flower -> mapper.convertValue(flower, FlowerDTO.class))
                 .collect(Collectors.toList());
     }
-
     @Override
-    public List<FlowerDTO> getAll() {
-      return flowerMapper.fromFlowerList(flowerRepository.findAll());
-    }
-
-
-    @Override
-    public ResponseEntity<String> readFlower(Long id) {
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Flower is not found! Id is null");
+    public Flower findById(Long flowerId) throws FlowerServiceException {
+        Optional<Flower> optionalFlower = flowerRepository.findById(flowerId);
+        if (optionalFlower.isEmpty()) {
+            throw new FlowerServiceException("product id is invalid: " + flowerId);
         }
-
-        FlowerDTO flower = read(id);
-        String dto = JsonConverter.getString(flower, objectMapper);
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<FlowerDTO>> getAllFlowers() {
-        return ResponseEntity.ok(readAll());
+        return optionalFlower.get();
     }
     @Override
-    public Flower getFlower(Long id) {
-        return flowerRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Flower with this id is not founded", HttpStatus.NOT_FOUND));
-    }
-
-    @Override
-    @Transactional
-    public void addToClientCart(Long flowerId, String email) {
-        Client client = clientService.findByEmail(email);
-        if(email == null){
-            throw new RuntimeException("Client is not found! Id is null");
-        }
-        Cart cart = client.getCart();
-        if (cart == null){
-            Cart newCart = cartService.createCart(client, Collections.singletonList(flowerId));
-            client.setCart(newCart);
-            clientService.save(client);
-        }else{
-            cartService.addFlowers(cart,Collections.singletonList(flowerId));
-        }
+    public FlowerDTO getFlowerDTO(Flower flower) {
+        FlowerDTO flowerDTO = new FlowerDTO();
+        flowerDTO.setId(flower.getId());
+        flowerDTO.setPrice(flower.getPrice());
+        flowerDTO.setSort(flower.getSort());
+        flowerDTO.setType(flower.getType());
+        return flowerDTO;
     }
 }
