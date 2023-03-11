@@ -9,7 +9,7 @@ public interface FlowerService {
 
     FlowerDTO read(Long id);
 
-    FlowerDTO update(Flower flowerDTO);
+    void updateFlower(FlowerDTO flowerDTO, Long flowerId);
 
     FlowerDTO delete(Long id);
 
@@ -18,4 +18,7 @@ public interface FlowerService {
     Flower findById(Long flowerId);
 
     FlowerDTO getFlowerDTO(Flower flower);
+    void createFlower(FlowerDTO flowerDTO);
+
+    List<FlowerDTO> getAllFlowers();
 }

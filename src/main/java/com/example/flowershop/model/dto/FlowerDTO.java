@@ -7,12 +7,13 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FlowerDTO {
     private Long id;
-    private@NonNull String sort;
-    private@NonNull Type type;
-    private@NonNull double price;
+    private String sort;
+    private Type type;
+    private double price;
 
     public Long getId() {
         return id;
@@ -44,5 +45,8 @@ public class FlowerDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public FlowerDTO() {
     }
 }

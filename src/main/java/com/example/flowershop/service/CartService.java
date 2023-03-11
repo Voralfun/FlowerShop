@@ -1,7 +1,7 @@
 package com.example.flowershop.service;
 
-import com.example.flowershop.model.dto.Cart.AddToCartDTO;
-import com.example.flowershop.model.dto.Cart.CartDTO;
+import com.example.flowershop.model.dto.cart.AddToCartDTO;
+import com.example.flowershop.model.dto.cart.CartDTO;
 import com.example.flowershop.model.entity.Client;
 
 public interface CartService {

@@ -4,13 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum Type {
-    ROSE,
-    CHRYSANTHEMUM,
-    PEONIES,
-    ASTER,
-    CHAMOMILE,
-    GERANIUM;
+    ROSE("Роза"),
+    CHRYSANTHEMUM("Хризантема"),
+    PEONIES("Пионы"),
+    ASTER("Астра"),
+    CHAMOMILE("Ромашка"),
+    GERANIUM("Герань");
+
+    public String getFlowerType() {
+        return flowerType;
+    }
+
+    Type(String flowerType) {
+        this.flowerType = flowerType;
+    }
+
+    private final String flowerType;
 
 }

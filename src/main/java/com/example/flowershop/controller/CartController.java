@@ -1,11 +1,12 @@
 package com.example.flowershop.controller;
 
 import com.example.flowershop.common.ApiResponse;
-import com.example.flowershop.model.dto.Cart.AddToCartDTO;
-import com.example.flowershop.model.dto.Cart.CartDTO;
+import com.example.flowershop.model.dto.cart.AddToCartDTO;
+import com.example.flowershop.model.dto.cart.CartDTO;
 import com.example.flowershop.model.entity.Client;
 import com.example.flowershop.service.CartService;
 import com.example.flowershop.service.impl.AuthenticationServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/cart")
 public class CartController {
+    @Autowired
     private CartService cartService;
+    @Autowired
     private AuthenticationServiceImpl authenticationServiceImpl;
 
     @PostMapping("/add")
@@ -26,7 +29,7 @@ public class CartController {
 
         cartService.addToCart(addToCartDTO, client );
 
-        return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse(true, "Добавлено в корзину"), HttpStatus.CREATED);
     }
 
 
@@ -54,7 +57,7 @@ public class CartController {
 
         cartService.deleteCartItem(itemId, client);
 
-        return new ResponseEntity<>(new ApiResponse(true, "Item has been removed"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Предмет был удалён"), HttpStatus.OK);
 
     }
 

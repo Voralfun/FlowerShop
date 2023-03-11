@@ -1,11 +1,10 @@
-package com.example.flowershop.model.dto.Cart;
+package com.example.flowershop.model.dto.cart;
 
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 
-import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter

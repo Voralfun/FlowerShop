@@ -16,8 +16,11 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "surname")
     private String surname;
+    @Column(name = "patronymic")
     private String patronymic;
     private LocalDate birthdate;
     @JsonIgnore
@@ -27,8 +30,12 @@ public class Client {
     @JsonIgnore
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+    @Column(name = "email")
     private String email;
-    private Integer phoneNUM;
+    @Column(name = "phone_number")
+    private String phoneNUM;
+    @Column(name = "password")
+    private String password;
     @Enumerated(EnumType.STRING)
     Status status;
 
@@ -96,13 +103,8 @@ public class Client {
         this.email = email;
     }
 
-    public Integer getPhoneNUM() {
-        return phoneNUM;
-    }
 
-    public void setPhoneNUM(Integer phoneNUM) {
-        this.phoneNUM = phoneNUM;
-    }
+
 
     public Status getStatus() {
         return status;
@@ -112,12 +114,29 @@ public class Client {
         this.status = status;
     }
 
-    public Client(String name, String surname, String patronymic, String email, Integer phoneNUM) {
+    public String getPhoneNUM() {
+        return phoneNUM;
+    }
+
+    public void setPhoneNUM(String phoneNUM) {
+        this.phoneNUM = phoneNUM;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Client(String name, String surname, String patronymic, String email, String phoneNUM, String password) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
         this.email = email;
         this.phoneNUM = phoneNUM;
+        this.password = password;
     }
 
     public Client() {

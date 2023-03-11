@@ -5,12 +5,14 @@ import com.example.flowershop.model.entity.AuthenticationToken;
 import com.example.flowershop.model.entity.Client;
 import com.example.flowershop.model.repository.TokenRepository;
 import com.example.flowershop.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+    @Autowired
     TokenRepository tokenRepository;
 
     public void saveConfirmationToken(AuthenticationToken authenticationToken) {

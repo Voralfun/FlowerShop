@@ -16,10 +16,10 @@ public class Flower {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "flower_sort")
-    private@NonNull String sort;
+    private String sort;
     @Enumerated(EnumType.STRING)
-    private@NonNull Type type;
-    private@NonNull double price;
+    private Type type;
+    private double price;
     @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)

@@ -1,10 +1,8 @@
-package com.example.flowershop.model.dto.Cart;
+package com.example.flowershop.model.dto.cart;
 
 import com.example.flowershop.model.entity.Cart;
 import com.example.flowershop.model.entity.Flower;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
@@ -13,11 +11,7 @@ public class CartItemDTO {
     private Integer quantity;
     private Flower flower;
 
-    public CartItemDTO(Long id, Integer quantity, Flower flower) {
-        this.id = id;
-        this.quantity = quantity;
-        this.flower = flower;
-    }
+
 
     public Long getId() {
         return id;
@@ -43,6 +37,11 @@ public class CartItemDTO {
         this.flower = flower;
     }
 
+    public CartItemDTO() {
+    }
     public CartItemDTO(Cart cart) {
+        this.id = cart.getId();
+        this.quantity = cart.getQuantity();
+        this.setFlower(cart.getFlower());
     }
 }

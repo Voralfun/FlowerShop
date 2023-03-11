@@ -9,32 +9,29 @@ import com.example.flowershop.service.FlowerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-
 public class FlowerServiceImpl implements FlowerService {
-
+    @Autowired
     FlowerRepository flowerRepository;
     ObjectMapper mapper;
 
 
-    public Flower createFlower(FlowerDTO flowerDTO) {
-        flowerRepository.findById(flowerDTO.getId()).ifPresent(
-                h -> {
-                    throw new FlowerServiceException("Товар с таким id уже зарегистрирован");
-                }
-        );
-
-        Flower flower = mapper.convertValue(flowerDTO, Flower.class);
-        Flower save = flowerRepository.save(flower);
-        return mapper.convertValue(save, Flower.class);
+    @Override
+    public void createFlower(FlowerDTO flowerDTO) {
+       Flower flower = new Flower();
+       flower.setSort(flowerDTO.getSort());
+       flower.setType(flowerDTO.getType());
+       flower.setPrice(flowerDTO.getPrice());
+       flowerRepository.save(flower);
     }
     private static final String EXC_MESSAGE = "Не найден товар с такми id";
     @Override
@@ -44,17 +41,16 @@ public class FlowerServiceImpl implements FlowerService {
         return mapper.convertValue(flower, FlowerDTO.class);
     }
     @Override
-    public FlowerDTO update(Flower flowerDTO) {
-        Long id = flowerDTO.getId();
-        if (id == null) {
-            throw new FlowerServiceException("Не найден id товара");
+    public void updateFlower(FlowerDTO flowerDTO, Long flowerId) throws FlowerServiceException {
+        Optional<Flower> optionalFlower = flowerRepository.findById(flowerId);
+        if (!optionalFlower.isPresent()) {
+            throw new FlowerServiceException("Не добавлен продукт");
         }
-        read(id);
-        Flower flower = mapper.convertValue(flowerDTO, Flower.class);
-        flower.setStatus(Status.valueOf(String.valueOf(Status.UPDATED)));
-        Flower save = flowerRepository.save(flower);
-        return mapper.convertValue(save, FlowerDTO.class);
-
+        Flower flower = optionalFlower.get();
+        flower.setSort(flowerDTO.getSort());
+        flower.setType(flowerDTO.getType());
+        flower.setPrice(flowerDTO.getPrice());
+        flowerRepository.save(flower);
     }
 
 
@@ -88,5 +84,14 @@ public class FlowerServiceImpl implements FlowerService {
         flowerDTO.setSort(flower.getSort());
         flowerDTO.setType(flower.getType());
         return flowerDTO;
+    }
+    public List<FlowerDTO> getAllFlowers() {
+        List<Flower> allFlowers = flowerRepository.findAll();
+
+        List<FlowerDTO> flowerdto = new ArrayList<>();
+        for(Flower flower: allFlowers) {
+            flowerdto.add(getFlowerDTO(flower));
+        }
+        return flowerdto;
     }
 }

@@ -1,9 +1,9 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.exceptions.FlowerServiceException;
-import com.example.flowershop.model.dto.Cart.AddToCartDTO;
-import com.example.flowershop.model.dto.Cart.CartDTO;
-import com.example.flowershop.model.dto.Cart.CartItemDTO;
+import com.example.flowershop.model.dto.cart.AddToCartDTO;
+import com.example.flowershop.model.dto.cart.CartDTO;
+import com.example.flowershop.model.dto.cart.CartItemDTO;
 import com.example.flowershop.model.entity.Cart;
 import com.example.flowershop.model.entity.Client;
 import com.example.flowershop.model.entity.Flower;
@@ -12,6 +12,7 @@ import com.example.flowershop.service.CartService;
 import com.example.flowershop.service.FlowerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +24,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
+    @Autowired
  FlowerService flowerService;
+  @Autowired
  CartRepository cartRepository;
     public void addToCart(AddToCartDTO addToCartDto, Client client) {
         Flower flower = flowerService.findById(addToCartDto.getFlowerId());

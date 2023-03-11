@@ -1,4 +1,4 @@
-package com.example.flowershop.model.dto.Cart;
+package com.example.flowershop.model.dto.cart;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -8,9 +8,8 @@ import lombok.Setter;
 @Setter
 public class AddToCartDTO {
     private Long id;
-    private @NotNull
-    Long flowerId;
-    private @NotNull Integer quantity;
+    private Long flowerId;
+    private Integer quantity;
 
     public Long getId() {
         return id;
