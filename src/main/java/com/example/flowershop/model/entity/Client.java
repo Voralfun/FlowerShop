@@ -1,5 +1,6 @@
 package com.example.flowershop.model.entity;
 
+import com.example.flowershop.model.entity.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,9 +28,6 @@ public class Client {
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     LocalDateTime createdAt;
-    @JsonIgnore
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
     @Column(name = "email")
     private String email;
     @Column(name = "phone_number")
@@ -87,13 +85,6 @@ public class Client {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     public String getEmail() {
         return email;
@@ -102,8 +93,6 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
-
-
 
 
     public Status getStatus() {

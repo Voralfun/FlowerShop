@@ -15,10 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 
 @Slf4j
 @Service
@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
         cart.setFlower(flower);
         cart.setClient(client);
         cart.setQuantity(addToCartDto.getQuantity());
-
+        cart.setUpdatedAt(LocalDateTime.now());
         cartRepository.save(cart);
 
     }
@@ -57,7 +57,6 @@ public class CartServiceImpl implements CartService {
     }
 
     public void deleteCartItem(Long cartItemId, Client client) {
-        // the item id belongs to user
 
         Optional<Cart> optionalCart = cartRepository.findById(cartItemId);
 
@@ -70,10 +69,8 @@ public class CartServiceImpl implements CartService {
         if (cart.getClient() != client) {
             throw  new FlowerServiceException("Товар в корзине не принадлежит пользователю: " +cartItemId);
         }
-
+        cart.setUpdatedAt(LocalDateTime.now());
         cartRepository.delete(cart);
-
-
     }
 
 }

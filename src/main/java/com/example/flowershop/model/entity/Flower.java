@@ -1,12 +1,13 @@
 package com.example.flowershop.model.entity;
 
+import com.example.flowershop.model.entity.enums.Status;
+import com.example.flowershop.model.entity.enums.Type;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Entity
 @Getter
 @Setter

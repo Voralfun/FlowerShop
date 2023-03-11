@@ -1,9 +1,8 @@
 package com.example.flowershop.model.dto;
 
-import com.example.flowershop.model.entity.Type;
+import com.example.flowershop.model.entity.enums.Type;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 
 @Getter
 @Setter

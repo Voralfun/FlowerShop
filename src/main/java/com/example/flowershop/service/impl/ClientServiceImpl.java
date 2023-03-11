@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -56,6 +57,7 @@ public class ClientServiceImpl implements ClientService {
         authenticationService.saveConfirmationToken(authenticationToken);
 
         ResponseDTO responseDto = new ResponseDTO("Успешно", "Аккаунт успешно создан");
+        client.setCreatedAt(LocalDateTime.now());
         return responseDto;
     }
 

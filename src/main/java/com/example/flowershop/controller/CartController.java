@@ -4,8 +4,8 @@ import com.example.flowershop.common.ApiResponse;
 import com.example.flowershop.model.dto.cart.AddToCartDTO;
 import com.example.flowershop.model.dto.cart.CartDTO;
 import com.example.flowershop.model.entity.Client;
+import com.example.flowershop.service.AuthenticationService;
 import com.example.flowershop.service.CartService;
-import com.example.flowershop.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,14 @@ public class CartController {
     @Autowired
     private CartService cartService;
     @Autowired
-    private AuthenticationServiceImpl authenticationServiceImpl;
+    private AuthenticationService authenticationService;
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDTO,
                                                  @RequestParam("token") String token) {
-        authenticationServiceImpl.authenticate(token);
+        authenticationService.authenticate(token);
 
-        Client client = authenticationServiceImpl.getClient(token);
+        Client client = authenticationService.getClient(token);
 
 
         cartService.addToCart(addToCartDTO, client );
@@ -36,9 +36,9 @@ public class CartController {
     @GetMapping("/")
     public ResponseEntity<CartDTO> getCartItems(@RequestParam("token") String token) {
 
-        authenticationServiceImpl.authenticate(token);
+        authenticationService.authenticate(token);
 
-        Client client = authenticationServiceImpl.getClient(token);
+        Client client = authenticationService.getClient(token);
 
         CartDTO cartDto = cartService.listCartItems(client);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
@@ -50,14 +50,14 @@ public class CartController {
                                                       @RequestParam("token") String token) {
 
         // authenticate the token
-        authenticationServiceImpl.authenticate(token);
+        authenticationService.authenticate(token);
 
         // find the user
-        Client client = authenticationServiceImpl.getClient(token);
+        Client client =authenticationService.getClient(token);
 
         cartService.deleteCartItem(itemId, client);
 
-        return new ResponseEntity<>(new ApiResponse(true, "Предмет был удалён"), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Предмет был удалён из корзины"), HttpStatus.OK);
 
     }
 

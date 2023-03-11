@@ -1,4 +1,4 @@
-package com.example.flowershop.model.entity;
+package com.example.flowershop.model.entity.enums;
 
 public enum Status {
     CREATED,
